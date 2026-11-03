@@ -1,180 +1,359 @@
 # MESA & MINT
 
-> *A table worth returning to.*
+*A table worth returning to.*
 
-A complete, production-quality website for **MESA & MINT** — a **fictional** premium contemporary restaurant and cafe concept set in Bengaluru, India. It is built as a portfolio demonstration for independent restaurants, cafes, fine-dining rooms, bistros and cloud kitchens, and as a reusable foundation for real client sites.
+MESA & MINT is a premium restaurant and cafe website concept, built to demonstrate a refined digital experience for hospitality businesses — from independent cafes to fine-dining rooms. It pairs a dark, editorial visual identity with a fully working digital menu, a guided reservation request flow and a contact form, backed by server-side validation and an email integration that is ready to configure.
 
-> **This is a concept.** MESA & MINT does not exist. The menu, prices, hours, location and copy are illustrative; no real customers, reviews, chefs, awards or press are claimed. The site says so in its footer, on the menu, reservations, story and contact pages, and in its structured data.
+**Live demo:** [mesa-mint-restaurant-demo.vercel.app](https://mesa-mint-restaurant-demo.vercel.app/)
+
+> [!IMPORTANT]
+> MESA & MINT is a fictional restaurant created as a portfolio demonstration. It is not an operating business and does not take real bookings. See the [demo disclaimer](#demo-disclaimer).
 
 ---
 
 ## Contents
 
-- [What's included](#whats-included)
+- [Preview](#preview)
+- [Features](#features)
 - [Technology stack](#technology-stack)
+- [Pages and routes](#pages-and-routes)
+- [Reservation system](#reservation-system)
+- [Contact form](#contact-form)
 - [Getting started](#getting-started)
 - [Environment variables](#environment-variables)
-- [Reservation email configuration](#reservation-email-configuration)
-- [Deploying to Vercel](#deploying-to-vercel)
+- [Deployment](#deployment)
 - [Project structure](#project-structure)
+- [Customisation](#customisation)
 - [Image attribution](#image-attribution)
-- [Demo limitations](#demo-limitations)
-- [Customisation guide for client projects](#customisation-guide-for-client-projects)
+- [Demo disclaimer](#demo-disclaimer)
+- [Future improvements](#future-improvements)
+- [License](#license)
 
 ---
 
-## What's included
+## Preview
 
-| Route | Highlights |
+[![MESA & MINT — share image showing the homepage hero](src/app/opengraph-image.jpg)](https://mesa-mint-restaurant-demo.vercel.app/)
+
+The image above is the site's Open Graph share card, generated from the homepage hero photograph. Visit the [live demo](https://mesa-mint-restaurant-demo.vercel.app/) to see the full experience.
+
+---
+
+## Features
+
+### Status at a glance
+
+| Feature | Status |
 | --- | --- |
-| `/` | Cinematic hero, philosophy introduction, four signature dishes in an asymmetric editorial layout, the experience, our philosophy, featured menu by course, bar feature, reservation call to action, location & hours |
-| `/menu` | 21 illustrative dishes across Small Plates, Main Course, Desserts and Beverages; accessible category filters, a vegetarian-only switch, Indian veg/non-veg marks, allergens and dietary labels, animated transitions |
-| `/reservations` | A guided three-step reservation **request**: one-tap dates for the next open days (plus a calendar), time slots that disable when too soon or on closed days, guest and occasion chips, a live summary, client- and server-side validation, honeypot, rate limiting, loading/success/error states and an honest "not configured" mode |
-| `/our-story` | Editorial page covering philosophy, culinary approach, ingredients & sourcing and the dining experience |
-| `/contact` | Enquiry form (server-processed, honest states), configurable WhatsApp call to action, clearly labelled illustrative map |
-| 404 | Branded "This table isn't set" page |
+| All pages, navigation, menu filtering and responsive layouts | Working |
+| Reservation and contact form validation (browser and server) | Working |
+| Reservation and enquiry **email delivery** | Requires configuration — **not configured on the live demo** |
+| WhatsApp call to action | Requires configuration — **not configured on the live demo** |
+| SEO metadata, sitemap, robots and share images | Working |
 
-Also: page-specific metadata, Open Graph and Twitter images, `sitemap.xml`, `robots.txt`, truthful `Restaurant` JSON-LD, SVG favicon and Apple touch icon, skip link, keyboard-accessible mobile navigation with focus trapping, `prefers-reduced-motion` support and security headers.
+When email is not configured, both forms display a notice up front and, on submission, state clearly that the request was **not sent**. Neither form ever reports success unless the email provider confirms delivery.
 
-### Design system
+### Design and experience
 
-- **Palette** (CSS variables in `src/app/globals.css`, exposed to Tailwind via `@theme`): charcoal `#171714`, umber `#24221F`, burgundy `#6B292E`, olive `#85866B`, cream `#F5F0E7`, stone `#B7B1A7`, line `#49443D`.
-- **Type**: Cormorant Garamond (display) and Manrope (body) via `next/font`.
-- **Language**: hairline borders, numbered editorial sections, underline-style form controls, square (not rounded) shapes, a fine film-grain overlay and restrained motion.
+- Dark editorial visual design: charcoal, burgundy, olive and cream palette defined as CSS variables, Cormorant Garamond display type and Manrope body text.
+- Cinematic full-screen hero with directional lighting overlays and a slow settle animation.
+- Responsive header with a full-screen mobile menu (focus trap, Escape to close, scroll lock).
+- Restrained scroll reveals and transitions that respect `prefers-reduced-motion`; content stays visible without JavaScript.
+- Layouts designed for phones (375 px and up), tablets and desktops, with no horizontal scrolling.
+
+### Homepage
+
+Hero, restaurant introduction, four signature dishes (each linking to its entry on the menu), the dining experience, the restaurant's philosophy, featured dishes by course, a bar feature, a reservation call to action, and illustrative location and opening hours.
+
+### Digital menu
+
+- **21 illustrative dishes** across four courses: Small Plates (6), Main Course (7), Desserts (4) and Beverages (4).
+- Each dish has its own photograph, a description, a price in Indian rupees (₹225–₹2,850) and dietary information.
+- **Category filters** (All, Small Plates, Main Course, Desserts, Beverages) and a **vegetarian-only** switch, with the result count announced to screen readers.
+- Indian-style vegetarian and non-vegetarian marks, plus labels for vegan, gluten-free, spicy, zero-proof, contains alcohol and signature dishes.
+- Allergen notes for gluten, crustaceans, eggs, fish, peanuts, soy, dairy, tree nuts, celery, mustard, sesame and sulphites, where they apply.
+- Vegetarian dishes are prepared without egg, following Indian convention.
+
+### Reservations
+
+A three-step **reservation request** flow: date, time, guests and occasion; contact details; special requests and consent. See [Reservation system](#reservation-system).
+
+### Contact and story
+
+- Enquiry form with typed enquiry categories, a WhatsApp card that only links when a number is configured, and a clearly labelled illustrative map.
+- *Our Story* page covering philosophy, culinary approach, ingredients and sourcing, and the dining experience.
+- Branded 404 page.
+
+### SEO, performance and accessibility
+
+- Page-specific titles, descriptions, canonical URLs, Open Graph and Twitter cards.
+- `sitemap.xml`, `robots.txt` (with `/api/` disallowed) and `Restaurant` JSON-LD limited to concept information — no address, phone number or opening hours are published as structured data.
+- Locally stored, pre-optimised photography served through `next/image` as AVIF or WebP, with blur placeholders and a preloaded hero image.
+- All pages prerender as static HTML; only the two API routes run on demand. The animation library loads only on `/menu`.
+- Security headers: `X-Content-Type-Options`, `Referrer-Policy`, `X-Frame-Options` and `Permissions-Policy`.
+- Skip link, visible focus states, labelled controls and fieldsets, live-region status messages, and text contrast audited against WCAG AA.
 
 ---
 
 ## Technology stack
 
-| Concern | Choice |
+| Area | Technology |
 | --- | --- |
-| Framework | Next.js 16.4 (App Router, Turbopack, Cache Components, Partial Prefetching) |
+| Framework | [Next.js](https://nextjs.org) 16.4 — App Router, Turbopack, Cache Components, Partial Prefetching |
+| UI | React 19.3 (server components by default) |
 | Language | TypeScript 5.9 |
 | Styling | Tailwind CSS 4.3 with CSS-variable design tokens |
-| Animation | Motion for React 14 for the menu filter transitions only (`LazyMotion` + `domAnimation`, loaded on `/menu`); scroll reveals, the hero and the mobile menu use CSS transitions |
+| Animation | Motion for React 14 (menu filter transitions); CSS transitions elsewhere |
 | Icons | Lucide React |
-| Forms | React Hook Form + Zod 4 (one shared schema validates in the browser and on the server) |
-| Email | Resend (server-side only) |
-| Images | `next/image` with locally stored, pre-optimised JPEGs, AVIF/WebP delivery and blur placeholders |
+| Forms and validation | React Hook Form 7 and Zod 4 via `@hookform/resolvers` — one shared schema validates in the browser and on the server |
+| Email | Resend (server-side only, guarded by `server-only`) |
+| Fonts | Cormorant Garamond and Manrope via `next/font/google` |
+| Image tooling | sharp (development dependency) for download, grading and optimisation scripts |
+| Quality | ESLint 9 with `eslint-config-next` (Core Web Vitals and TypeScript rules) |
 
-Server components are the default; only the header, menu filters, forms and a tiny reveal helper are client components. Scroll reveals never hide content without JavaScript or for visitors who prefer reduced motion.
+Package manager: **npm** (`package-lock.json` is committed). Requires **Node.js 20.9 or later**.
+
+---
+
+## Pages and routes
+
+| Route | Type | Description |
+| --- | --- | --- |
+| `/` | Page | Homepage |
+| `/menu` | Page | Digital menu with filters |
+| `/reservations` | Page | Reservation request form |
+| `/our-story` | Page | Restaurant story and philosophy |
+| `/contact` | Page | Enquiry form, WhatsApp card, illustrative map |
+| `/api/reservations` | `POST` route handler | Validates and emails reservation requests |
+| `/api/contact` | `POST` route handler | Validates and emails enquiries |
+| `/sitemap.xml`, `/robots.txt` | Metadata routes | Generated from `src/app/sitemap.ts` and `src/app/robots.ts` |
+| `/opengraph-image.jpg`, `/icon.svg`, `/apple-icon.png` | Metadata files | Share image and icons |
+| Any unknown path | 404 | `src/app/not-found.tsx` |
+
+---
+
+## Reservation system
+
+> [!NOTE]
+> The form submits a **reservation request**, not a booking. Tables are never confirmed automatically, live availability is not shown, and there is no booking calendar. On the live demo, email delivery is **not configured**, so submitted requests are not sent anywhere and the page says so.
+
+### What the visitor does
+
+1. **Your visit** — choose one of the next six open days or any date in the calendar, a lunch or dinner time slot, the number of guests (1–8) and an optional occasion.
+2. **Your details** — full name, email and phone.
+3. **Final touches** — optional special requests (up to 500 characters) and a required consent checkbox acknowledging that this is a request.
+
+A live summary of the request appears beside the submit button.
+
+### Booking rules
+
+Defined in `src/lib/reservation-rules.ts` and judged in **Asia/Kolkata** time on both the browser and the server:
+
+| Rule | Value |
+| --- | --- |
+| Opening days | Tuesday – Sunday (closed Monday) |
+| Lunch slots | 12:30 pm – 2:30 pm, every 30 minutes |
+| Dinner slots | 7:00 pm – 10:30 pm, every 30 minutes |
+| Party size | 1–8 guests (larger groups are directed to the contact form) |
+| Booking window | Up to 60 days ahead; no past dates |
+| Same-day notice | At least 90 minutes before the chosen slot |
+
+Unavailable slots are disabled in the interface, and the same rules are enforced again on the server.
+
+### How a request is processed
+
+`POST /api/reservations` (`src/app/api/reservations/route.ts`):
+
+1. A best-effort, per-instance rate limit: 8 requests per IP address per 10 minutes.
+2. The JSON body is read with a 16 KB limit and a content-type check.
+3. A hidden honeypot field (`website`) must be empty.
+4. The shared Zod schema validates and sanitises every field.
+5. If email is not configured, the endpoint responds `503` and the visitor is told the request was not sent.
+6. Otherwise, an HTML and plain-text notification (all values HTML-escaped) is sent to `RESERVATION_TO_EMAIL`, with `reply-to` set to the guest.
+7. Only after Resend confirms delivery does the visitor see:
+   > Your reservation request has been received. Our team will contact you to confirm your table.
+
+| Response | Meaning |
+| --- | --- |
+| `200` | Request emailed to the restaurant |
+| `400` | Unreadable or oversized body, or honeypot filled |
+| `422` | Validation errors, returned per field |
+| `429` | Rate limit reached |
+| `502` | Email provider failed; the request was **not** received |
+| `503` | Email delivery not configured; the request was **not** sent |
+
+---
+
+## Contact form
+
+`/contact` posts to `POST /api/contact`, which uses the same pipeline (rate limit, body limit, honeypot, Zod validation, Resend delivery and honest error states).
+
+| Field | Rules |
+| --- | --- |
+| Name | Required, 2–80 characters |
+| Email | Required, valid address |
+| Phone | Optional; Indian or international format |
+| Enquiry type | Required: General enquiry, Private dining & events, Large group (9+ guests), Dietary or accessibility question, Feedback, Press & partnerships |
+| Message | Required, 20–2,000 characters |
+
+Enquiries are sent to `CONTACT_TO_EMAIL`, or to `RESERVATION_TO_EMAIL` when that is not set.
 
 ---
 
 ## Getting started
 
-**Requirements:** Node.js 20.9 or newer, npm.
+### Prerequisites
+
+- Node.js 20.9 or later
+- npm
+
+### Install and run
+
+```bash
+git clone https://github.com/Sohangi-Singh/mesa-mint-restaurant-demo.git
+```
+
+```bash
+cd mesa-mint-restaurant-demo
+```
 
 ```bash
 npm install
-cp .env.example .env.local   # optional — the site runs without email configured
-npm run dev                  # http://localhost:3000
 ```
 
-| Script | Purpose |
-| --- | --- |
-| `npm run dev` | Development server |
-| `npm run build` | Production build |
-| `npm run start` | Serve the production build |
-| `npm run lint` | ESLint (Next.js core-web-vitals + TypeScript rules) |
-| `npm run typecheck` | TypeScript, no emit |
-| `npm run images` | Download and optimise the photography listed in `scripts/image-manifest.json` (`-- --force` re-encodes from the local cache, `-- --refetch` re-downloads) |
-| `npm run brand-assets` | Regenerate `opengraph-image.jpg` and `apple-icon.png` |
+```bash
+cp .env.example .env.local
+```
 
-The optimised images are committed in `src/assets/images`, so `npm run images` is only needed when you change the photography.
+```bash
+npm run dev
+```
+
+The site runs at [http://localhost:3000](http://localhost:3000). Every variable is optional for local development; without email settings the forms run in their "not configured" mode.
+
+### Production build
+
+```bash
+npm run build
+```
+
+```bash
+npm run start
+```
+
+### Scripts
+
+| Command | Purpose |
+| --- | --- |
+| `npm run dev` | Start the development server |
+| `npm run build` | Create a production build |
+| `npm run start` | Serve the production build |
+| `npm run lint` | Run ESLint |
+| `npm run typecheck` | Run the TypeScript compiler without emitting files |
+| `npm run images` | Download and optimise photography from `scripts/image-manifest.json` (`-- --force` re-encodes from the local cache, `-- --refetch` re-downloads) |
+| `npm run brand-assets` | Regenerate `src/app/opengraph-image.jpg` and `src/app/apple-icon.png` |
+
+The optimised images are committed in `src/assets/images`, so `npm run images` is only needed when changing the photography.
 
 ---
 
 ## Environment variables
 
-Copy `.env.example` to `.env.local`. **Never commit `.env.local`** — it is git-ignored.
+Copy `.env.example` to `.env.local` for local development. **Never commit `.env.local`** — it is excluded by `.gitignore`. No real credentials are stored in this repository.
 
-| Variable | Required | Scope | Description |
-| --- | --- | --- | --- |
-| `NEXT_PUBLIC_SITE_URL` | Recommended | Public | Canonical origin for metadata, sitemap and JSON-LD. Falls back to Vercel's production domain, then `http://localhost:3000`. |
-| `RESEND_API_KEY` | For email | **Server only** | Resend API key. |
-| `RESERVATION_FROM_EMAIL` | For email | Server only | Sender on a Resend-verified domain, e.g. `MESA & MINT <reservations@your-domain.com>`. |
-| `RESERVATION_TO_EMAIL` | For email | Server only | Inbox that receives reservation requests. |
-| `CONTACT_TO_EMAIL` | Optional | Server only | Inbox for contact enquiries; defaults to `RESERVATION_TO_EMAIL`. |
-| `NEXT_PUBLIC_WHATSAPP_NUMBER` | Optional | Public | Digits only with country code (e.g. `919876543210`). When unset or implausible, the contact page shows a "not yet available" card instead of a link. |
+| Variable | Required | Scope | Purpose | Live demo |
+| --- | --- | --- | --- | --- |
+| `NEXT_PUBLIC_SITE_URL` | Recommended | Public | Canonical origin for metadata, sitemap and JSON-LD. Falls back to Vercel's production domain (`VERCEL_PROJECT_PRODUCTION_URL`), then `http://localhost:3000`. | Resolves to the live domain |
+| `RESEND_API_KEY` | For email | Server only | Resend API key | Not configured |
+| `RESERVATION_FROM_EMAIL` | For email | Server only | Sender on a Resend-verified domain, e.g. `MESA & MINT <reservations@your-domain.com>` | Not configured |
+| `RESERVATION_TO_EMAIL` | For email | Server only | Inbox that receives reservation requests | Not configured |
+| `CONTACT_TO_EMAIL` | Optional | Server only | Inbox for enquiries; defaults to `RESERVATION_TO_EMAIL` | Not configured |
+| `NEXT_PUBLIC_WHATSAPP_NUMBER` | Optional | Public | Digits only with country code, e.g. `919876543210`. When unset or implausible, a "not yet available" card is shown instead of a link. | Not configured |
 
-Pages are prerendered, so the "not configured" notices on the forms reflect the environment **at build time**. The API routes always read the live environment, so they never claim success without delivering an email.
+Email delivery switches on only when `RESEND_API_KEY`, `RESERVATION_FROM_EMAIL` and `RESERVATION_TO_EMAIL` are all present. Because pages are prerendered, the configuration notices on the forms reflect the environment **at build time** — redeploy after changing variables. The API routes always read the current environment.
 
----
+### Configuring Resend
 
-## Reservation email configuration
-
-The reservation form submits a **request**, never a confirmed booking. There is no live availability and no booking calendar.
-
-1. Create an account at [resend.com](https://resend.com) and an API key.
-2. Verify your sending domain in Resend (DNS records). For a quick test you can use the sandbox sender `onboarding@resend.dev`, which can only deliver to the email address on your Resend account.
-3. Set `RESEND_API_KEY`, `RESERVATION_FROM_EMAIL` and `RESERVATION_TO_EMAIL` (and optionally `CONTACT_TO_EMAIL`).
-4. Restart the dev server, or redeploy.
-
-**How a request flows** (`src/app/api/reservations/route.ts`):
-
-1. A best-effort, per-instance rate limit (8 requests / 10 minutes / IP).
-2. JSON is read with a 16 KB size limit and content-type check.
-3. Honeypot field `website` must be empty.
-4. The shared Zod schema (`src/lib/validation/reservation.ts`) validates and sanitises every field: name, email and phone format; date not in the past, not a Monday (closed) and at most 60 days ahead, all judged in **Asia/Kolkata** time; time from the listed lunch or dinner slots and at least 90 minutes ahead for same-day requests; 1–8 guests; a known occasion; requests of up to 500 characters with control characters stripped.
-5. If email is not configured, the API returns `503 NOT_CONFIGURED` and the form tells the visitor plainly that **their request was not sent**.
-6. Otherwise an HTML and plain-text notification (all values HTML-escaped) is sent to the restaurant with `reply-to` set to the guest.
-7. Only after Resend confirms delivery does the visitor see:
-   > Your reservation request has been received. Our team will contact you to confirm your table.
-
-   A provider failure returns `502` and a "not received — please try again" message. Network failures are handled in the browser the same way.
-
-The contact form (`src/app/api/contact/route.ts`) follows the same pipeline.
+1. Create an account at [resend.com](https://resend.com) and generate an API key.
+2. Verify a sending domain. For testing only, the sandbox sender `onboarding@resend.dev` can deliver to the email address registered on your Resend account.
+3. Set the three email variables (and optionally `CONTACT_TO_EMAIL`), then restart the dev server or redeploy.
 
 ---
 
-## Deploying to Vercel
+## Deployment
 
-1. Push the project to a Git repository (GitHub, GitLab or Bitbucket).
-2. In Vercel choose **Add New → Project** and import the repository. The Next.js preset needs no changes.
-3. Under **Settings → Environment Variables** add the variables above for Production (and Preview if wanted). Set `NEXT_PUBLIC_SITE_URL` to your final domain.
-4. Deploy. After changing environment variables, redeploy so the prerendered pages pick them up.
-5. Optional: add a custom domain, and replace the in-memory rate limiter with a shared store (for example Upstash Redis) if you expect abuse — serverless instances do not share memory.
+The live demo is deployed on Vercel at **[mesa-mint-restaurant-demo.vercel.app](https://mesa-mint-restaurant-demo.vercel.app/)**.
+
+To deploy your own copy:
+
+1. Push the repository to GitHub, GitLab or Bitbucket.
+2. In Vercel, choose **Add New → Project** and import the repository. The detected Next.js settings need no changes.
+3. Optionally add the [environment variables](#environment-variables) under **Settings → Environment Variables**, then redeploy.
+4. Optionally add a custom domain and set `NEXT_PUBLIC_SITE_URL` to it.
+
+The built-in rate limiter keeps its counters in memory, so on serverless hosting each instance counts separately. Use a shared store such as Upstash Redis if strict limits are required.
 
 ---
 
 ## Project structure
 
-```
+```text
 src/
-  app/                    Routes, metadata files, API route handlers
+  app/                    Routes, metadata files and API route handlers
     api/reservations/     Reservation request endpoint
     api/contact/          Contact enquiry endpoint
-    menu/ reservations/ our-story/ contact/
-    layout.tsx            Fonts, metadata, header/footer, motion provider
-    template.tsx          Subtle CSS route fade
+    menu/  reservations/  our-story/  contact/
+    layout.tsx            Fonts, metadata, header and footer
+    template.tsx          Route fade transition
     not-found.tsx         404 page
-    sitemap.ts robots.ts  SEO routes
-    opengraph-image.jpg   Generated share image (npm run brand-assets)
-  assets/images/          Optimised photography (npm run images)
+    sitemap.ts  robots.ts
+  assets/images/          Optimised photography
   components/
     home/                 Homepage sections
-    menu/                 Menu filters and item rows
+    menu/                 Menu filters and dish rows
     forms/                Form controls, reservation and contact forms
-    contact/              WhatsApp card, illustrative map
+    contact/              WhatsApp card and illustrative map
     sections/             Shared sections (reservation CTA, hours, location)
     layout/               Header, footer, wordmark
-    ui/                   Buttons, headings, reveal animations, diet marks, notices
+    ui/                   Buttons, headings, reveals, diet marks, notices
   data/                   Restaurant content: site.ts, menu.ts, images.ts
   lib/                    Validation, reservation rules, email, formatting, metadata
 scripts/
-  image-manifest.json     Photo sources and credits
-  fetch-images.mjs        Download + optimise photography
+  image-manifest.json     Photo sources, credits and grading options
+  fetch-images.mjs        Download, grade and optimise photography
   generate-brand-assets.mjs
 ```
 
 ---
 
+## Customisation
+
+The project is structured so it can be adapted for a real restaurant without touching component code.
+
+| To change | Edit |
+| --- | --- |
+| Name, tagline, description, cuisine, disclaimer, navigation, hours, placeholder contacts | `src/data/site.ts` |
+| Menu items, categories, prices, diets, allergens, signature and featured dishes | `src/data/menu.ts` |
+| Photography, alt text and crop focal points | `scripts/image-manifest.json` → `npm run images` → `src/data/images.ts` |
+| Colours, type scale and animation | `src/app/globals.css` |
+| Fonts | `src/app/layout.tsx` |
+| Time slots, closed days, party size, booking window, same-day notice | `src/lib/reservation-rules.ts` |
+| Form fields and validation messages | `src/lib/validation/` and `src/components/forms/` |
+| Notification email layout | `src/lib/email.ts` |
+| Structured data | `RestaurantJsonLd` in `src/app/page.tsx` |
+
+For a real venue, also remove the concept disclaimers, replace the placeholder contact details and social labels, replace the illustrative map, verify allergen and pricing information with the kitchen, and only add `address`, `telephone` or opening hours to the structured data once they are confirmed.
+
+---
+
 ## Image attribution
 
-All photography is from [Unsplash](https://unsplash.com) and used under the [Unsplash License](https://unsplash.com/license), which permits free commercial and non-commercial use without required attribution. Credit is given here with thanks. Only images marked *Free* on Unsplash were used — none from Unsplash+.
+All photography comes from [Unsplash](https://unsplash.com) and is used under the [Unsplash License](https://unsplash.com/license). Only images marked *Free* were used; none are from Unsplash+. Credit is given below with thanks.
 
-Each dish photograph represents exactly one menu item. Food and drink photos receive a shared, gentle house grade in `scripts/fetch-images.mjs` (slightly warmer, softer whites, with extra lift-down for photos shot on bright white surfaces) so that work by different photographers reads as one cohesive set; framing focal points live in `src/data/images.ts`. Dishes were named and described to match their photographs; the photos are of real dishes and spaces by the credited photographers and are **not** of MESA & MINT, which does not exist. People appear only incidentally — hands, partial or distant figures — and no one is presented as MESA & MINT staff or guests.
+Each dish photograph represents exactly one menu item; dishes were named and described to match their photographs. Food and drink images receive a shared, subtle colour grade in `scripts/fetch-images.mjs` so that work by different photographers reads as one set. The photographs show real dishes and spaces by the credited photographers — not MESA & MINT, which does not exist. People appear only incidentally (hands, partial or distant figures) and are not presented as staff or guests.
+
+<details>
+<summary>Photographer credits (40 images)</summary>
 
 | File | Photographer | Source |
 | --- | --- | --- |
@@ -219,37 +398,38 @@ Each dish photograph represents exactly one menu item. Food and drink photos rec
 | `drink-jaggery-old-fashioned.jpg` | Milan Trninic | [unsplash.com/photos/cocktail-with-orange-peel-on-a-bar-counter-IHvtgDaeJvo](https://unsplash.com/photos/cocktail-with-orange-peel-on-a-bar-counter-IHvtgDaeJvo) |
 | `drink-masala-chai.jpg` | Amir Shrestha | [unsplash.com/photos/a-glass-of-liquid-on-a-table-Ke0BiErDX_Y](https://unsplash.com/photos/a-glass-of-liquid-on-a-table-Ke0BiErDX_Y) |
 
-Sources and credits live in `scripts/image-manifest.json`; update it when swapping images, then run `npm run images`.
+</details>
 
 ---
 
-## Demo limitations
+## Demo disclaimer
 
-- **Fictional business.** No real address, phone number, email inbox or social accounts exist. Contact details use a reserved `.example` domain and a zeroed number, and are labelled as placeholders.
-- **Reservations are requests.** There is no availability engine, table management or booking calendar, and the site never auto-confirms a booking.
-- **Email delivery was not tested end to end.** No Resend credentials were available during development. The not-configured, validation, network-failure, delivery-failure and success paths were exercised in the browser — the last two with mocked API responses.
-- **Rate limiting is per instance** and in memory, so it is a speed bump rather than a guarantee on serverless hosting.
-- **No CMS.** Content is edited in typed TypeScript files (see below).
-- **Allergen information is illustrative** and must be replaced with verified kitchen data for any real menu.
-- **Map is illustrative.** It is an abstract SVG, not a map embed.
+MESA & MINT is a **fictional restaurant concept** created as a web development portfolio demonstration.
+
+- All menu items, prices, business details, opening hours and restaurant information are illustrative and do not represent an operating restaurant.
+- No address, phone number, email inbox or social media account exists. Contact details use a reserved `.example` domain and a zeroed phone number, and are labelled as placeholders.
+- The reservation form must not be represented as a live booking service. On the live demo, requests are not delivered, and no request is ever confirmed automatically.
+- Allergen information is illustrative and must not be relied upon.
 
 ---
 
-## Customisation guide for client projects
+## Future improvements
 
-| To change | Edit |
-| --- | --- |
-| Name, tagline, description, cuisine, disclaimer | `src/data/site.ts` |
-| Navigation, opening hours, placeholder contacts, location copy | `src/data/site.ts` |
-| Menu items, categories, prices, diets, allergens, signature and featured dishes | `src/data/menu.ts` |
-| Photography, alt text and crops | Add files to `scripts/image-manifest.json` (optional `brightness` for bright food shots) → `npm run images` → map them in `src/data/images.ts` with an optional `position` focal point |
-| Colours, spacing utilities, type scale, animation keyframes | `src/app/globals.css` (tokens on `:root`, mapped in `@theme inline`) |
-| Fonts | `src/app/layout.tsx` (`next/font/google`) |
-| Reservation rules (time slots, closed days, party size, booking window, same-day notice) | `src/lib/reservation-rules.ts` |
-| Form fields and validation messages | `src/lib/validation/*.ts` and `src/components/forms/*` |
-| Notification email layout | `src/lib/email.ts` |
-| Page copy | Section components in `src/components/home/*` and the route files in `src/app/*/page.tsx` |
-| Share image and icons | `src/app/icon.svg`, then `npm run brand-assets` |
-| Structured data | `RestaurantJsonLd` in `src/app/page.tsx` — for a real venue, add `address`, `telephone`, `openingHoursSpecification` and `geo` only once they are verified |
+These are possible extensions. **None of them are implemented.**
 
-**For a real restaurant, remember to:** remove the concept disclaimers (`site.conceptNotice`, `ConceptNote` usages and the footer note), replace the placeholder contact details and social links, replace the illustrative map with a real embed or directions link, confirm allergen and pricing data (including tax and service notes) with the kitchen, and connect a verified email domain.
+- Live reservation management with staff confirmation workflows
+- Restaurant administration dashboard
+- Automated confirmation emails to guests
+- Table availability and capacity management
+- Online ordering for takeaway or delivery
+- Payment integration for deposits or orders
+- CMS-based menu and content management
+- Shared-store rate limiting for serverless deployments
+
+---
+
+## License
+
+No explicit license has been provided for this project's source code. Unless a license is added, all rights are reserved by the author.
+
+The photography is licensed separately under the [Unsplash License](https://unsplash.com/license) by its respective photographers, as credited above.
